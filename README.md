@@ -4,7 +4,7 @@ A web-based application designed to automate the process of team trading request
 Additionally, an interaction button will be provided to facilitate the claim of a trade request. Upon claiming the request, the bot will send a direct message to the user providing the contact information for the trade, thereby preventing multiple individuals from contacting the same person regarding a trade. 
 
 # Installation
-...Under Construction...
+...Under Construction..
 
 # Screenshots
 ...Under construction...
