@@ -2,6 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import { config } from "dotenv";
 import rateLimit from 'express-rate-limit';
+import cookie from 'cookie';
 import { v4 as uuidv4 } from 'uuid';
 
 config();
@@ -14,9 +15,9 @@ const encodeBase64 = (str: string) => {
     return Buffer.from(str).toString('base64');
 };
 
-const getClientId = (req: VercelRequest): string => {
-    const clientId = req.headers['x-client-id'];
-    return typeof clientId === 'string' ? clientId : uuidv4(); // Generate a unique ID if not provided
+const getClientIdFromCookies = (req: VercelRequest): string | null => {
+    const cookies = cookie.parse(req.headers.cookie || '');
+    return cookies['client_id'] || null;
 };
 
 const clientRateLimiters = new Map<string, ReturnType<typeof rateLimit>>();
@@ -49,13 +50,24 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
     const discordBotToken = process.env.DISCORD_BOT_TOKEN;
     const channelId = process.env.DISCORD_CHANNEL_ID;
 
-    const clientId = getClientId(req);
+    let clientId = getClientIdFromCookies(req);
+
+    if (!clientId) {
+        clientId = uuidv4();
+        res.setHeader('Set-Cookie', cookie.serialize('client_id', clientId, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24 * 365 // 1 year
+        }));
+    }
 
     if (!clientRateLimiters.has(clientId)) {
         clientRateLimiters.set(clientId, createRateLimiter());
     }
 
     const limiter = clientRateLimiters.get(clientId);
+
     if (!limiter) {
         return res.status(500).send('Rate limiter initialization error');
     }
@@ -63,6 +75,8 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
     limiter(req as any, res as any, async () => {
         try {
             const body = await parseRequestBody(req) as any;
+            console.log('Request Body:', body);
+
             const name = capitalizeWords(body.name);
             const team = body.team;
             const sanitizedContact = body.contact.replace(/[\s-]/g, '_');
