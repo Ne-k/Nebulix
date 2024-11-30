@@ -29,6 +29,22 @@ const createRateLimiter = () => rateLimit({
     }
 });
 
+const parseRequestBody = (req: VercelRequest) => {
+    return new Promise((resolve, reject) => {
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            try {
+                resolve(JSON.parse(body));
+            } catch (err) {
+                reject(err);
+            }
+        });
+    });
+};
+
 const handler = async (req: VercelRequest, res: VercelResponse) => {
     const discordBotToken = process.env.DISCORD_BOT_TOKEN;
     const channelId = process.env.DISCORD_CHANNEL_ID;
@@ -46,9 +62,10 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
 
     limiter(req as any, res as any, async () => {
         try {
-            const name = capitalizeWords(req.body.name);
-            const team = req.body.team;
-            const sanitizedContact = req.body.contact.replace(/[\s-]/g, '_');
+            const body = await parseRequestBody(req) as any;
+            const name = capitalizeWords(body.name);
+            const team = body.team;
+            const sanitizedContact = body.contact.replace(/[\s-]/g, '_');
             const encodedContact = encodeBase64(sanitizedContact);
 
             const threadResponse = await axios.post(
@@ -71,7 +88,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
             const embed = {
                 title: "New Trade Request",
                 description: `
-                    \`${name}\` from \`${team}\` would like to trade \`${req.body.offer}\` for \`${req.body.tradeFor}\`.
+                    \`${name}\` from \`${team}\` would like to trade \`${body.offer}\` for \`${body.tradeFor}\`.
                     **Contact Information:** [Revealed when you claim the trade]
                 `,
                 color: 3447003,
