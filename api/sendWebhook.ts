@@ -2,8 +2,6 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import { config } from "dotenv";
 import rateLimit from 'express-rate-limit';
-import cookie from 'cookie';
-import { v4 as uuidv4 } from 'uuid';
 
 config();
 
@@ -15,9 +13,9 @@ const encodeBase64 = (str: string) => {
     return Buffer.from(str).toString('base64');
 };
 
-const getClientIdFromCookies = (req: VercelRequest): string | null => {
-    const cookies = cookie.parse(req.headers.cookie || '');
-    return cookies['client_id'] || null;
+const getClientId = (req: VercelRequest): string | null => {
+    const clientId = req.headers['x-client-id'];
+    return typeof clientId === 'string' ? clientId : null;
 };
 
 const clientRateLimiters = new Map<string, ReturnType<typeof rateLimit>>();
@@ -30,36 +28,14 @@ const createRateLimiter = () => rateLimit({
     }
 });
 
-const parseRequestBody = (req: VercelRequest) => {
-    return new Promise((resolve, reject) => {
-        let body = '';
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });
-        req.on('end', () => {
-            try {
-                resolve(JSON.parse(body));
-            } catch (err) {
-                reject(err);
-            }
-        });
-    });
-};
-
 const handler = async (req: VercelRequest, res: VercelResponse) => {
     const discordBotToken = process.env.DISCORD_BOT_TOKEN;
     const channelId = process.env.DISCORD_CHANNEL_ID;
 
-    let clientId = getClientIdFromCookies(req);
-
+    const clientId = getClientId(req);
     if (!clientId) {
-        clientId = uuidv4();
-        res.setHeader('Set-Cookie', cookie.serialize('client_id', clientId, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
-            maxAge: 60 * 60 * 24 * 365 // 1 year
-        }));
+        // return res.status(400).send('Client ID header missing');
+        return 0
     }
 
     if (!clientRateLimiters.has(clientId)) {
@@ -67,19 +43,15 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
     }
 
     const limiter = clientRateLimiters.get(clientId);
-
     if (!limiter) {
         return res.status(500).send('Rate limiter initialization error');
     }
 
     limiter(req as any, res as any, async () => {
         try {
-            const body = await parseRequestBody(req) as any;
-            console.log('Request Body:', body);
-
-            const name = capitalizeWords(body.name);
-            const team = body.team;
-            const sanitizedContact = body.contact.replace(/[\s-]/g, '_');
+            const name = capitalizeWords(req.body.name);
+            const team = req.body.team;
+            const sanitizedContact = req.body.contact.replace(/[\s-]/g, '_');
             const encodedContact = encodeBase64(sanitizedContact);
 
             const threadResponse = await axios.post(
@@ -102,7 +74,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
             const embed = {
                 title: "New Trade Request",
                 description: `
-                    \`${name}\` from \`${team}\` would like to trade \`${body.offer}\` for \`${body.tradeFor}\`.
+                    \`${name}\` from \`${team}\` would like to trade \`${req.body.offer}\` for \`${req.body.tradeFor}\`.
                     **Contact Information:** [Revealed when you claim the trade]
                 `,
                 color: 3447003,
