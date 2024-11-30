@@ -2,6 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import { config } from "dotenv";
 import rateLimit from 'express-rate-limit';
+import { v4 as uuidv4 } from 'uuid';
 
 config();
 
@@ -13,9 +14,9 @@ const encodeBase64 = (str: string) => {
     return Buffer.from(str).toString('base64');
 };
 
-const getClientId = (req: VercelRequest): string | null => {
+const getClientId = (req: VercelRequest): string => {
     const clientId = req.headers['x-client-id'];
-    return typeof clientId === 'string' ? clientId : null;
+    return typeof clientId === 'string' ? clientId : uuidv4(); // Generate a unique ID if not provided
 };
 
 const clientRateLimiters = new Map<string, ReturnType<typeof rateLimit>>();
@@ -33,9 +34,6 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
     const channelId = process.env.DISCORD_CHANNEL_ID;
 
     const clientId = getClientId(req);
-    if (!clientId) {
-        return res.status(400).send('Client ID header missing');
-    }
 
     if (!clientRateLimiters.has(clientId)) {
         clientRateLimiters.set(clientId, createRateLimiter());
