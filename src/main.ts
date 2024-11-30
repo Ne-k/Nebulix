@@ -106,9 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 if (response.status === 429) {
-                    throw new Error('Too many requests. Please try again in a minute or two.');
+                    throw new Error('Too many requests. Please try again in a minute or two. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
                 } else {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Network response was not ok. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
                 }
             }
 
@@ -118,12 +118,12 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error:', error);
             if (error instanceof Error) {
                 if (error.message.includes('Too many requests')) {
-                    alert('You have been rate-limited. Please try again in the next minute or two.');
+                    alert('You have been rate-limited. Please try again in the next minute or two. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
                 } else {
-                    alert('There was an error submitting your form. Please try again later.');
+                    alert('There was an error submitting your form. Please try again later. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
                 }
             } else {
-                alert('An unknown error occurred. Please try again later.');
+                alert('An unknown error occurred. Please try again later. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
             }
             submitButton?.removeAttribute('disabled');
         }
