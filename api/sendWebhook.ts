@@ -43,6 +43,7 @@ const parseRequestBody = (req: VercelRequest) => {
         });
         req.on('end', () => {
             try {
+                console.log('Raw Request Body:', body); // Log the raw request body
                 resolve(JSON.parse(body));
             } catch (err) {
                 reject(err);
@@ -57,163 +58,100 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
 
     const clientId = getClientId(req);
 
-    if (clientId) {
-        if (!clientRateLimiters.has(clientId)) {
-            clientRateLimiters.set(clientId, createRateLimiter());
+    const applyRateLimiter = (limiter: ReturnType<typeof rateLimit>) => {
+        return new Promise<void>((resolve, reject) => {
+            limiter(req as any, res as any, (err: unknown) => {
+                if (err) return reject(err);
+                resolve();
+            });
+        });
+    };
+
+    try {
+        if (clientId) {
+            if (!clientRateLimiters.has(clientId)) {
+                clientRateLimiters.set(clientId, createRateLimiter());
+            }
+
+            const limiter = clientRateLimiters.get(clientId);
+            if (!limiter) {
+                return res.status(500).send('Rate limiter initialization error');
+            }
+
+            await applyRateLimiter(limiter);
+        } else {
+            await applyRateLimiter(ipRateLimiter);
         }
 
-        const limiter = clientRateLimiters.get(clientId);
-        if (!limiter) {
-            return res.status(500).send('Rate limiter initialization error');
-        }
+        const body = await parseRequestBody(req) as any;
+        console.log('Parsed Request Body:', body);
 
-        limiter(req as any, res as any, async () => {
-            try {
-                const body = await parseRequestBody(req) as any;
-                console.log('Request Body:', body);
+        const name = capitalizeWords(body.name);
+        const team = body.team;
+        const sanitizedContact = body.contact.replace(/[\s-]/g, '_');
+        const encodedContact = encodeBase64(sanitizedContact);
 
-                const name = capitalizeWords(body.name);
-                const team = body.team;
-                const sanitizedContact = body.contact.replace(/[\s-]/g, '_');
-                const encodedContact = encodeBase64(sanitizedContact);
-
-                const threadResponse = await axios.post(
-                    `https://discord.com/api/v9/channels/${channelId}/threads`,
-                    {
-                        name: `New Trade Request: ${name} From ${team}`,
-                        auto_archive_duration: 10080,
-                        type: 11,
-                    },
-                    {
-                        headers: {
-                            'Authorization': `Bot ${discordBotToken}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-
-                const threadId = threadResponse.data.id;
-
-                const embed = {
-                    title: "New Trade Request",
-                    description: `
-                        \`${name}\` from \`${team}\` would like to trade \`${body.offer}\` for \`${body.tradeFor}\`.
-                        **Contact Information:** [Revealed when you claim the trade]
-                    `,
-                    color: 3447003,
-                    footer: {
-                        text: `${encodeBase64(encodedContact)}`
-                    }
-                };
-
-                const components = [
-                    {
-                        type: 1, // Action row
-                        components: [
-                            {
-                                type: 2, // Button
-                                style: 1, // Primary style
-                                label: "Claim",
-                                custom_id: `Trading_${encodedContact}`
-                            }
-                        ]
-                    }
-                ];
-
-                await axios.post(
-                    `https://discord.com/api/v9/channels/${threadId}/messages`,
-                    {
-                        embeds: [embed],
-                        components: components
-                    },
-                    {
-                        headers: {
-                            'Authorization': `Bot ${discordBotToken}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-
-                res.status(200).send('Message sent');
-            } catch (error: unknown) {
-                console.error('Error:', error);
-                res.status(500).send({ error: 'Server Error', details: error });
+        const threadResponse = await axios.post(
+            `https://discord.com/api/v9/channels/${channelId}/threads`,
+            {
+                name: `New Trade Request: ${name} From ${team}`,
+                auto_archive_duration: 10080,
+                type: 11,
+            },
+            {
+                headers: {
+                    'Authorization': `Bot ${discordBotToken}`,
+                    'Content-Type': 'application/json'
+                }
             }
-        });
-    } else {
-        ipRateLimiter(req as any, res as any, async () => {
-            try {
-                const body = await parseRequestBody(req) as any;
-                console.log('Request Body:', body);
+        );
 
-                const name = capitalizeWords(body.name);
-                const team = body.team;
-                const sanitizedContact = body.contact.replace(/[\s-]/g, '_');
-                const encodedContact = encodeBase64(sanitizedContact);
+        const threadId = threadResponse.data.id;
 
-                const threadResponse = await axios.post(
-                    `https://discord.com/api/v9/channels/${channelId}/threads`,
-                    {
-                        name: `New Trade Request: ${name} From ${team}`,
-                        auto_archive_duration: 10080,
-                        type: 11,
-                    },
-                    {
-                        headers: {
-                            'Authorization': `Bot ${discordBotToken}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-
-                const threadId = threadResponse.data.id;
-
-                const embed = {
-                    title: "New Trade Request",
-                    description: `
-                        \`${name}\` from \`${team}\` would like to trade \`${body.offer}\` for \`${body.tradeFor}\`.
-                        **Contact Information:** [Revealed when you claim the trade]
-                    `,
-                    color: 3447003,
-                    footer: {
-                        text: `${encodeBase64(encodedContact)}`
-                    }
-                };
-
-                const components = [
-                    {
-                        type: 1, // Action row
-                        components: [
-                            {
-                                type: 2, // Button
-                                style: 1, // Primary style
-                                label: "Claim",
-                                custom_id: `Trading_${encodedContact}`
-                            }
-                        ]
-                    }
-                ];
-
-                await axios.post(
-                    `https://discord.com/api/v9/channels/${threadId}/messages`,
-                    {
-                        embeds: [embed],
-                        components: components
-                    },
-                    {
-                        headers: {
-                            'Authorization': `Bot ${discordBotToken}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-
-                res.status(200).send('Message sent');
-            } catch (error: unknown) {
-                console.error('Error:', error);
-                res.status(500).send({ error: 'Server Error', details: error });
+        const embed = {
+            title: "New Trade Request",
+            description: `
+                \`${name}\` from \`${team}\` would like to trade \`${body.offer}\` for \`${body.tradeFor}\`.
+                **Contact Information:** [Revealed when you claim the trade]
+            `,
+            color: 3447003,
+            footer: {
+                text: `${encodeBase64(encodedContact)}`
             }
-        });
+        };
+
+        const components = [
+            {
+                type: 1, // Action row
+                components: [
+                    {
+                        type: 2, // Button
+                        style: 1, // Primary style
+                        label: "Claim",
+                        custom_id: `Trading_${encodedContact}`
+                    }
+                ]
+            }
+        ];
+
+        await axios.post(
+            `https://discord.com/api/v9/channels/${threadId}/messages`,
+            {
+                embeds: [embed],
+                components: components
+            },
+            {
+                headers: {
+                    'Authorization': `Bot ${discordBotToken}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        res.status(200).send('Message sent');
+    } catch (error: unknown) {
+        console.error('Error:', error);
+        res.status(500).send({ error: 'Server Error', details: (error as Error).message });
     }
 };
 
