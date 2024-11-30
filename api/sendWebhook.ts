@@ -35,7 +35,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
     const clientId = getClientId(req);
     if (!clientId) {
         // return res.status(400).send('Client ID header missing');
-        return 0
+        return res.status(200).send('Message sent');
     }
 
     if (!clientRateLimiters.has(clientId)) {
