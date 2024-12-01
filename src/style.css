@@ -15,6 +15,19 @@ body {
   align-items: center;
   color: #FFFFFF;
 }
+input:focus, button:focus {
+  outline: 2px solid #FFD700;
+  outline-offset: 2px;
+}
+
+button:active {
+  background-color: #0e4811;
+  transform: scale(1);
+}
+
+button:focus:not(:disabled) {
+  background-color: #1a6b1a;
+}
 
 .container {
   display: flex;
@@ -29,11 +42,11 @@ body {
 .box {
   background-color: rgba(30, 86, 49, 0.85);
   width: 90%;
-  max-width: 600px; /* Reduced max-width */
-  padding: 20px; /* Reduced padding */
-  border-radius: 12px; /* Reduced border-radius */
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 12px;
   position: relative;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* Reduced shadow */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   justify-content: center;
