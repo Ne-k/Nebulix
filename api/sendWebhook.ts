@@ -22,8 +22,8 @@ const encodeBase64 = (str: string) => {
 const upload = multer();
 
 const validateRecaptchaToken = async (token: string) => {
-    const projectID = process.env.GOOGLE_CLOUD_PROJECT_ID || "default-project-id";
-    const recaptchaKey = process.env.RECAPTCHA_SITE_KEY || "default-site-key";
+    const projectID = String(process.env.GOOGLE_CLOUD_PROJECT_ID)
+    const recaptchaKey = process.env.RECAPTCHA_SITE_KEY
     const recaptchaAction = "submit";
 
     const client = new RecaptchaEnterpriseServiceClient();
