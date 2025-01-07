@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         grecaptcha.enterprise.ready(async () => {
             const token = await grecaptcha.enterprise.execute('6LdHCbEqAAAAALNidX3h6BpAxyqZ8_gEYotkF0m5', {action: 'submit'});
-            onSubmit(token);
+            await onSubmit(token);
         });
     });
 
