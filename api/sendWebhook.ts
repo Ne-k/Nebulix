@@ -22,8 +22,8 @@ const encodeBase64 = (str: string) => {
 const upload = multer();
 
 const validateRecaptchaToken = async (token: string) => {
-    const projectID = String(process.env.GOOGLE_PROJECT_ID)
-    const recaptchaKey = process.env.RECAPTCHA_SITE_KEY
+    const projectID = String(process.env.GOOGLE_PROJECT_ID);
+    const recaptchaKey = process.env.RECAPTCHA_SITE_KEY;
     const recaptchaAction = "submit";
 
     const client = new RecaptchaEnterpriseServiceClient({
@@ -34,7 +34,6 @@ const validateRecaptchaToken = async (token: string) => {
         projectId: projectID
     });
 
-    // @ts-ignore
     const projectPath = client.projectPath(projectID);
 
     const request = {
