@@ -141,6 +141,8 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 }
             );
 
+            console.log('Thread response:', threadResponse.data);
+
             const threadId = threadResponse.data.id;
 
             const embed = {
@@ -151,7 +153,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 `,
                 color: 3447003,
                 footer: {
-                    text: `${encodeBase64(encodedContact)}`
+                    text: `${encodedContact}`
                 }
             };
 
@@ -175,7 +177,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 }
             ];
 
-            await axios.post(
+            const messageResponse = await axios.post(
                 `https://discord.com/api/v9/channels/${threadId}/messages`,
                 {
                     embeds: [embed],
@@ -189,11 +191,13 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 }
             );
 
+            console.log('Message response:', messageResponse.data);
+
             res.status(200).send('Message sent');
         });
     } catch (error: unknown) {
-        console.error('Error:', error);
-        res.status(500).send({ error: 'Server Error', details: (error as Error).message });
+        console.error('Error:', error.message, error.response?.data);
+        res.status(500).send({ error: 'Server Error', details: error.message });
     }
 };
 
