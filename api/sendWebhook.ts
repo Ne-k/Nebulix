@@ -1,8 +1,9 @@
-import {VercelRequest, VercelResponse} from '@vercel/node';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
-import {config} from "dotenv";
+import { config } from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import multer from 'multer';
+import { RecaptchaEnterpriseServiceClient } from '@google-cloud/recaptcha-enterprise';
 
 config();
 
@@ -37,6 +38,44 @@ const createRateLimiter = () => rateLimit({
 });
 
 const upload = multer();
+
+const validateRecaptchaToken = async (token: string) => {
+    const projectID = process.env.GOOGLE_CLOUD_PROJECT_ID || "default-project-id";
+    const recaptchaKey = process.env.RECAPTCHA_SITE_KEY || "default-site-key";
+    const recaptchaAction = "submit";
+
+    const client = new RecaptchaEnterpriseServiceClient();
+    const projectPath = client.projectPath(projectID);
+
+    const request = {
+        assessment: {
+            event: {
+                token: token,
+                siteKey: recaptchaKey,
+            },
+        },
+        parent: projectPath,
+    };
+
+    const [response] = await client.createAssessment(request);
+
+    if (!response.tokenProperties?.valid) {
+        console.log(`The CreateAssessment call failed because the token was: ${response.tokenProperties?.invalidReason ?? 'Unknown reason'}`);
+        return false;
+    }
+
+    if (response.tokenProperties?.action === recaptchaAction) {
+        console.log(`The reCAPTCHA score is: ${response.riskAnalysis?.score ?? 'Unknown'}`);
+        response.riskAnalysis?.reasons?.forEach((reason) => {
+            console.log(reason);
+        });
+
+        return true;
+    } else {
+        console.log("The action attribute in your reCAPTCHA tag does not match the action you are expecting to score");
+        return false;
+    }
+};
 
 const handler = async (req: VercelRequest, res: VercelResponse) => {
     const discordBotToken = process.env.DISCORD_BOT_TOKEN;
@@ -75,8 +114,13 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 return res.status(500).send('Error parsing form data');
             }
 
-            const {name, team, contact, offer, tradeFor} = req.body;
-            console.log('Parsed Form Data:', {name, team, contact, offer, tradeFor});
+            const { name, team, contact, offer, tradeFor, recaptchaToken } = req.body;
+            console.log('Parsed Form Data:', { name, team, contact, offer, tradeFor });
+
+            const isValidRecaptcha = await validateRecaptchaToken(recaptchaToken);
+            if (!isValidRecaptcha) {
+                return res.status(400).send('Invalid reCAPTCHA token');
+            }
 
             const nameCapitalized = capitalizeWords(name);
             const sanitizedContact = contact.replace(/[\s-]/g, '_');
@@ -120,6 +164,12 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                             style: 1, // Primary style
                             label: "Claim",
                             custom_id: `Trading_${encodedContact}`
+                        },
+                        {
+                            type: 2, // Button
+                            style: 2,
+                            label: "Delete Request",
+                            custom_id: `Delete_${threadId}`
                         }
                     ]
                 }
@@ -143,7 +193,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
         });
     } catch (error: unknown) {
         console.error('Error:', error);
-        res.status(500).send({error: 'Server Error', details: (error as Error).message});
+        res.status(500).send({ error: 'Server Error', details: (error as Error).message });
     }
 };
 

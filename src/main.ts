@@ -1,6 +1,7 @@
 import './style.css';
 import NET from 'vanta/dist/vanta.net.min';
 import * as THREE from 'three';
+declare var grecaptcha: any;
 
 document.addEventListener('DOMContentLoaded', () => {
     document.body.innerHTML = `
@@ -9,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="top-box">
           <p class="text">FRC 7034 Trading Form</p>
         </div>
-        <form class="trade-form">
+        <form class="trade-form" id="trade-form">
           <label for="name">Name:</label>
           <input type="text" id="name" name="name" required>
           <label for="team">Team/Affiliation: </label>
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <label for="tradeFor">Trade Request:</label>
           <input type="text" id="tradeFor" name="tradeFor" required>
           <p class="disclaimer">*Submitting this form will send a message to the team's communications server and is limited to 3 submissions per minute.<br>If you have any issues reach out to a team member.</p>
-          <button type="submit" class="submit-button" disabled>Submit</button>
+          <button type="submit" class="g-recaptcha" data-sitekey="6LdHCbEqAAAAALNidX3h6BpAxyqZ8_gEYotkF0m5" data-callback='onSubmit' data-action='submit'>Submit</button>
         </form>
       </div>
     </div>
@@ -74,6 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
     form?.addEventListener('submit', async (event) => {
         event.preventDefault();
 
+        grecaptcha.enterprise.ready(async () => {
+            const token = await grecaptcha.enterprise.execute('6LdHCbEqAAAAALNidX3h6BpAxyqZ8_gEYotkF0m5', {action: 'submit'});
+            onSubmit(token);
+        });
+    });
+
+    const onSubmit = async (token: string) => {
         const nameInput = document.querySelector<HTMLInputElement>('#name');
         const teamInput = document.querySelector<HTMLInputElement>('#team');
         const contactInput = document.querySelector<HTMLInputElement>('#contact');
@@ -97,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         payload.append('contact', contact);
         payload.append('offer', offer);
         payload.append('tradeFor', tradeFor);
+        payload.append('recaptchaToken', token);
 
         submitButton?.setAttribute('disabled', 'true');
 
@@ -129,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             submitButton?.removeAttribute('disabled');
         }
-    });
+    };
 
     submitButton?.removeAttribute('disabled');
 });
