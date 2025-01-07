@@ -1,7 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import { config } from 'dotenv';
-import rateLimit from 'express-rate-limit';
 import multer from 'multer';
 import { RecaptchaEnterpriseServiceClient } from '@google-cloud/recaptcha-enterprise';
 
@@ -15,27 +14,10 @@ const encodeBase64 = (str: string) => {
     return Buffer.from(str).toString('base64');
 };
 
-const getClientId = (req: VercelRequest): string | null => {
-    const clientId = req.headers['x-client-id'];
-    return typeof clientId === 'string' ? clientId : null;
-};
-
-const clientRateLimiters = new Map<string, ReturnType<typeof rateLimit>>();
-const ipRateLimiter = rateLimit({
-    windowMs: 60 * 1000, // 1 minute
-    limit: 3,
-    handler: (_req, res) => {
-        res.status(429).send('Too many requests from this IP, please try again later. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
-    }
-});
-
-const createRateLimiter = () => rateLimit({
-    windowMs: 60 * 1000, // 1 minute
-    limit: 3,
-    handler: (_req, res) => {
-        res.status(429).send('Too many requests from this client, please try again later. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
-    }
-});
+// const getClientId = (req: VercelRequest): string | null => {
+//     const clientId = req.headers['x-client-id'];
+//     return typeof clientId === 'string' ? clientId : null;
+// };
 
 const upload = multer();
 
@@ -81,33 +63,9 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
     const discordBotToken = process.env.DISCORD_BOT_TOKEN;
     const channelId = process.env.DISCORD_CHANNEL_ID;
 
-    const clientId = getClientId(req);
-
-    const applyRateLimiter = (limiter: ReturnType<typeof rateLimit>) => {
-        return new Promise<void>((resolve, reject) => {
-            limiter(req as any, res as any, (err: unknown) => {
-                if (err) return reject(err);
-                resolve();
-            });
-        });
-    };
+    // const clientId = getClientId(req);
 
     try {
-        if (clientId) {
-            if (!clientRateLimiters.has(clientId)) {
-                clientRateLimiters.set(clientId, createRateLimiter());
-            }
-
-            const limiter = clientRateLimiters.get(clientId);
-            if (!limiter) {
-                return res.status(500).send('Rate limiter initialization error');
-            }
-
-            await applyRateLimiter(limiter);
-        } else {
-            await applyRateLimiter(ipRateLimiter);
-        }
-
         // Parse the form data
         upload.none()(req as any, res as any, async (err: any) => {
             if (err) {
