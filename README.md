@@ -75,6 +75,9 @@ To use the `Discord/InteractionCreate.js` file, follow these steps:
 **Note:** The `Discord/InteractionCreate.js` file is meant to be an example or a rough idea of the interaction handling
 side of the bot and may be implemented differently depending on your bot structure.
 
+## Laundry List 
+[ ] Implement ReCaptcha to prevent spamming of requests
+
 ## Contributing
 
 Please read the [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting
