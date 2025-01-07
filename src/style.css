@@ -15,6 +15,7 @@ body {
   align-items: center;
   color: #FFFFFF;
 }
+
 input:focus, button:focus {
   outline: 2px solid #FFD700;
   outline-offset: 2px;
@@ -35,7 +36,7 @@ button:focus:not(:disabled) {
   align-items: center;
   height: 100%;
   width: 100%;
-  padding: 10px; /* Reduced padding */
+  padding: 10px;
   box-sizing: border-box;
 }
 
@@ -57,25 +58,25 @@ button:focus:not(:disabled) {
 
 .top-box {
   background-color: rgba(0, 0, 0, 0.85);
-  width: calc(100% - 10px); /* Reduced width */
+  width: calc(100% - 10px);
   height: auto;
-  border-radius: 12px; /* Reduced border-radius */
+  border-radius: 12px;
   position: absolute;
-  top: -5px; /* Reduced top */
+  top: -5px;
   left: 50%;
-  transform: translate(-50%, 10px); /* Reduced transform */
+  transform: translate(-50%, 10px);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5px 10px; /* Reduced padding */
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); /* Reduced shadow */
+  padding: 5px 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
   animation: slideDown 0.8s ease-out;
 }
 
 .text {
   color: #FFFFFF;
-  font-size: 1.2rem; /* Reduced font-size */
+  font-size: 1.2rem;
   text-align: center;
   margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
@@ -85,42 +86,42 @@ button:focus:not(:disabled) {
   font-family: 'Titillium Web', sans-serif;
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Reduced gap */
+  gap: 10px;
   width: 100%;
-  max-width: 400px; /* Reduced max-width */
-  margin-top: 40px; /* Reduced margin-top */
+  max-width: 400px;
+  margin-top: 40px;
   box-sizing: border-box;
   animation: fadeIn 1.5s ease-out;
-  font-size: 1.2rem; /* Reduced font-size */
+  font-size: 1.2rem;
 }
 
 .trade-form label {
   font-family: 'Titillium Web', sans-serif;
   color: #FFFFFF;
-  font-size: 1.2rem; /* Reduced font-size */
-  padding-bottom: 3px; /* Reduced padding-bottom */
+  font-size: 1.2rem;
+  padding-bottom: 3px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .trade-form input {
   font-family: 'Titillium Web', sans-serif;
-  padding: 8px; /* Reduced padding */
-  margin-bottom: 10px; /* Reduced margin-bottom */
-  border-radius: 6px; /* Reduced border-radius */
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
   border: 1px solid #CCCCCC;
-  font-size: 1.2rem; /* Reduced font-size */
+  font-size: 1.2rem;
   background-color: rgba(240, 240, 240, 0.85);
   box-sizing: border-box;
 }
 
 .trade-form button {
   font-family: 'Titillium Web', sans-serif;
-  padding: 8px; /* Reduced padding */
-  border-radius: 6px; /* Reduced border-radius */
+  padding: 8px;
+  border-radius: 6px;
   border: none;
   background-color: #308c53;
   color: #FFFFFF;
-  font-size: 1.2rem; /* Reduced font-size */
+  font-size: 1.2rem;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
   box-sizing: border-box;
@@ -132,7 +133,6 @@ button:focus:not(:disabled) {
   transform: scale(1.05);
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -147,21 +147,21 @@ button:focus:not(:disabled) {
     transform: translate(-50%, -50px);
   }
   to {
-    transform: translate(-50%, 10px); /* Reduced transform */
+    transform: translate(-50%, 10px);
   }
 }
 
 @media (max-width: 768px) {
   .box {
-    padding: 15px; /* Reduced padding */
+    padding: 15px;
   }
 
   .top-box {
-    width: calc(100% - 20px); /* Reduced width */
+    width: calc(100% - 20px);
   }
 
   .text {
-    font-size: 1rem; /* Reduced font-size */
+    font-size: 1rem;
   }
 
   .trade-form {
@@ -171,22 +171,22 @@ button:focus:not(:disabled) {
   .trade-form label,
   .trade-form input,
   .trade-form button {
-    font-size: 0.8rem; /* Reduced font-size */
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
   .box {
-    padding: 5px; /* Reduced padding */
+    padding: 5px;
   }
 
   .top-box {
-    padding: 3px 5px; /* Reduced padding */
-    width: calc(100% - 10px); /* Reduced width */
+    padding: 3px 5px;
+    width: calc(100% - 10px);
   }
 
   .text {
-    font-size: 0.8rem; /* Reduced font-size */
+    font-size: 0.8rem;
   }
 
   .trade-form {
@@ -196,8 +196,8 @@ button:focus:not(:disabled) {
   .trade-form label,
   .trade-form input,
   .trade-form button {
-    font-size: 0.6rem; /* Reduced font-size */
-    padding: 5px; /* Reduced padding */
+    font-size: 0.6rem;
+    padding: 5px;
   }
 }
 
@@ -205,7 +205,7 @@ button:focus:not(:disabled) {
   background-color: #1E5631;
   color: white;
   border: none;
-  padding: 8px 15px; /* Reduced padding */
+  padding: 8px 15px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
@@ -218,4 +218,57 @@ button:focus:not(:disabled) {
 .submit-button:hover:not(:disabled) {
   background-color: #134c13;
   transform: scale(1.05);
+}
+
+.top-right {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  background-color: rgba(30, 86, 49, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  transition: width 0.3s ease, transform 0.3s ease;
+  width: 30px;
+  overflow: hidden;
+}
+
+.top-right a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.top-right a svg {
+  fill: #FFFFFF;
+  transition: fill 0.3s ease;
+}
+
+.top-right a svg:hover {
+  fill: #FFD700;
+}
+
+.top-right:hover {
+  width: 230px;
+}
+
+.top-right .github-text {
+  opacity: 0;
+  margin-left: 10px;
+  color: #FFFFFF;
+  white-space: nowrap;
+  transition: opacity 0.3s ease;
+}
+
+.top-right:hover .github-text {
+  opacity: 1;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: #FFD700;
+  text-align: center;
+  margin-top: 10px;
 }

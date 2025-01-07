@@ -35,6 +35,7 @@
     "jsonwebtoken": "^9.0.2",
     "memory-cache": "^0.2.0",
     "node-cache": "^5.1.2",
+    "react-next-captcha": "^1.1.6",
     "uuid": "^11.0.3"
   }
 }
