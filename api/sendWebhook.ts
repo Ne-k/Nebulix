@@ -22,7 +22,7 @@ const getClientId = (req: VercelRequest): string | null => {
 const clientRateLimiters = new Map<string, ReturnType<typeof rateLimit>>();
 const ipRateLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    limit: 2,
+    limit: 3,
     handler: (_req, res) => {
         res.status(429).send('Too many requests from this IP, please try again later. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
     }
@@ -30,7 +30,7 @@ const ipRateLimiter = rateLimit({
 
 const createRateLimiter = () => rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    limit: 2,
+    limit: 3,
     handler: (_req, res) => {
         res.status(429).send('Too many requests from this client, please try again later. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
     }
