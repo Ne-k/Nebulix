@@ -196,8 +196,9 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
             res.status(200).send('Message sent');
         });
     } catch (error: unknown) {
-        console.error('Error:', error.message, error.response?.data);
-        res.status(500).send({ error: 'Server Error', details: error.message });
+        const typedError = error as any;
+        console.error('Error:', typedError.message, typedError.response?.data);
+        res.status(500).send({ error: 'Server Error', details: typedError.message });
     }
 };
 

@@ -61,18 +61,18 @@ The project consists of two main parts:
 1. **Website End**: This part of the system creates the Discord channel thread and sends a message with a trade request.
    It is handled by the `api/sendWebhook.ts` file.
 2. **Interaction Handling**: This part handles the interaction when a user clicks the "Claim" button in the Discord
-   message. It is handled by the `InteractionCreate.js` file.
+   message. It is handled by the `InteractionCreate.example.js` file.
 
-### Using `Discord/InteractionCreate.js`
+### Using `Discord/InteractionCreate.example.js`
 
-To use the `Discord/InteractionCreate.js` file, follow these steps:
+To use the `Discord/InteractionCreate.example.js` file, follow these steps:
 
 1. Ensure your Discord bot is set up to handle interactions. This typically involves setting up an event listener for
    interactions in your bot's main file.
 
 2. Ensure your bot has the necessary permissions to create threads and send messages in the specified channel.
 
-**Note:** The `Discord/InteractionCreate.js` file is meant to be an example or a rough idea of the interaction handling
+**Note:** The `Discord/InteractionCreate.example.js` file is meant to be an example or a rough idea of the interaction handling
 side of the bot and may be implemented differently depending on your bot structure.
 
 ## Laundry List 
