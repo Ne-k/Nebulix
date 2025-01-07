@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const offerInput = document.querySelector<HTMLInputElement>('#offer');
         const tradeForInput = document.querySelector<HTMLInputElement>('#tradeFor');
 
-        if (!nameInput || !teamInput || !contactInput || !offerInput || !tradeForInput ) {
+        if (!nameInput || !teamInput || !contactInput || !offerInput || !tradeForInput) {
             console.error('One or more form elements are missing.');
             alert('Failed to submit form. Please try again.');
             return;

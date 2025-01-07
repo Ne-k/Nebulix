@@ -1,274 +1,274 @@
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600&display=swap');
 
 @font-face {
-  font-family: 'Ethnocentric';
-  src: url('./font/ethnocentric rg.otf') format('opentype');
+    font-family: 'Ethnocentric';
+    src: url('./font/ethnocentric rg.otf') format('opentype');
 }
 
 body {
-  font-family: 'Ethnocentric', Arial, sans-serif;
-  background: linear-gradient(135deg, #0B3D0B, #0E4D0E);
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #FFFFFF;
+    font-family: 'Ethnocentric', Arial, sans-serif;
+    background: linear-gradient(135deg, #0B3D0B, #0E4D0E);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFFFFF;
 }
 
 input:focus, button:focus {
-  outline: 2px solid #FFD700;
-  outline-offset: 2px;
+    outline: 2px solid #FFD700;
+    outline-offset: 2px;
 }
 
 button:active {
-  background-color: #0e4811;
-  transform: scale(1);
+    background-color: #0e4811;
+    transform: scale(1);
 }
 
 button:focus:not(:disabled) {
-  background-color: #1a6b1a;
+    background-color: #1a6b1a;
 }
 
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .box {
-  background-color: rgba(30, 86, 49, 0.85);
-  width: 90%;
-  max-width: 600px;
-  padding: 20px;
-  border-radius: 12px;
-  position: relative;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  animation: fadeIn 1s ease-out;
+    background-color: rgba(30, 86, 49, 0.85);
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    animation: fadeIn 1s ease-out;
 }
 
 .top-box {
-  background-color: rgba(0, 0, 0, 0.85);
-  width: calc(100% - 10px);
-  height: auto;
-  border-radius: 12px;
-  position: absolute;
-  top: -5px;
-  left: 50%;
-  transform: translate(-50%, 10px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px 10px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-  box-sizing: border-box;
-  animation: slideDown 0.8s ease-out;
+    background-color: rgba(0, 0, 0, 0.85);
+    width: calc(100% - 10px);
+    height: auto;
+    border-radius: 12px;
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translate(-50%, 10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    animation: slideDown 0.8s ease-out;
 }
 
 .text {
-  color: #FFFFFF;
-  font-size: 1.2rem;
-  text-align: center;
-  margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    color: #FFFFFF;
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .trade-form {
-  font-family: 'Titillium Web', sans-serif;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  max-width: 400px;
-  margin-top: 40px;
-  box-sizing: border-box;
-  animation: fadeIn 1.5s ease-out;
-  font-size: 1.2rem;
+    font-family: 'Titillium Web', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 40px;
+    box-sizing: border-box;
+    animation: fadeIn 1.5s ease-out;
+    font-size: 1.2rem;
 }
 
 .trade-form label {
-  font-family: 'Titillium Web', sans-serif;
-  color: #FFFFFF;
-  font-size: 1.2rem;
-  padding-bottom: 3px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    font-family: 'Titillium Web', sans-serif;
+    color: #FFFFFF;
+    font-size: 1.2rem;
+    padding-bottom: 3px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .trade-form input {
-  font-family: 'Titillium Web', sans-serif;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  border: 1px solid #CCCCCC;
-  font-size: 1.2rem;
-  background-color: rgba(240, 240, 240, 0.85);
-  box-sizing: border-box;
+    font-family: 'Titillium Web', sans-serif;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #CCCCCC;
+    font-size: 1.2rem;
+    background-color: rgba(240, 240, 240, 0.85);
+    box-sizing: border-box;
 }
 
 .trade-form button {
-  font-family: 'Titillium Web', sans-serif;
-  padding: 8px;
-  border-radius: 6px;
-  border: none;
-  background-color: #308c53;
-  color: #FFFFFF;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  box-sizing: border-box;
-  animation: fadeIn 2s ease-out;
+    font-family: 'Titillium Web', sans-serif;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    background-color: #308c53;
+    color: #FFFFFF;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-sizing: border-box;
+    animation: fadeIn 2s ease-out;
 }
 
 .trade-form button:hover {
-  background-color: #177117;
-  transform: scale(1.05);
+    background-color: #177117;
+    transform: scale(1.05);
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideDown {
-  from {
-    transform: translate(-50%, -50px);
-  }
-  to {
-    transform: translate(-50%, 10px);
-  }
+    from {
+        transform: translate(-50%, -50px);
+    }
+    to {
+        transform: translate(-50%, 10px);
+    }
 }
 
 @media (max-width: 768px) {
-  .box {
-    padding: 15px;
-  }
+    .box {
+        padding: 15px;
+    }
 
-  .top-box {
-    width: calc(100% - 20px);
-  }
+    .top-box {
+        width: calc(100% - 20px);
+    }
 
-  .text {
-    font-size: 1rem;
-  }
+    .text {
+        font-size: 1rem;
+    }
 
-  .trade-form {
-    max-width: 100%;
-  }
+    .trade-form {
+        max-width: 100%;
+    }
 
-  .trade-form label,
-  .trade-form input,
-  .trade-form button {
-    font-size: 0.8rem;
-  }
+    .trade-form label,
+    .trade-form input,
+    .trade-form button {
+        font-size: 0.8rem;
+    }
 }
 
 @media (max-width: 480px) {
-  .box {
-    padding: 5px;
-  }
+    .box {
+        padding: 5px;
+    }
 
-  .top-box {
-    padding: 3px 5px;
-    width: calc(100% - 10px);
-  }
+    .top-box {
+        padding: 3px 5px;
+        width: calc(100% - 10px);
+    }
 
-  .text {
-    font-size: 0.8rem;
-  }
+    .text {
+        font-size: 0.8rem;
+    }
 
-  .trade-form {
-    max-width: 100%;
-  }
+    .trade-form {
+        max-width: 100%;
+    }
 
-  .trade-form label,
-  .trade-form input,
-  .trade-form button {
-    font-size: 0.6rem;
-    padding: 5px;
-  }
+    .trade-form label,
+    .trade-form input,
+    .trade-form button {
+        font-size: 0.6rem;
+        padding: 5px;
+    }
 }
 
 .submit-button {
-  background-color: #1E5631;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+    background-color: #1E5631;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .submit-button:disabled {
-  background-color: #686868;
-  cursor: not-allowed;
+    background-color: #686868;
+    cursor: not-allowed;
 }
 
 .submit-button:hover:not(:disabled) {
-  background-color: #134c13;
-  transform: scale(1.05);
+    background-color: #134c13;
+    transform: scale(1.05);
 }
 
 .top-right {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 10px;
-  background-color: rgba(30, 86, 49, 0.85);
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  transition: width 0.3s ease, transform 0.3s ease;
-  width: 30px;
-  overflow: hidden;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    background-color: rgba(30, 86, 49, 0.85);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    transition: width 0.3s ease, transform 0.3s ease;
+    width: 30px;
+    overflow: hidden;
 }
 
 .top-right a {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
 }
 
 .top-right a svg {
-  fill: #FFFFFF;
-  transition: fill 0.3s ease;
+    fill: #FFFFFF;
+    transition: fill 0.3s ease;
 }
 
 .top-right a svg:hover {
-  fill: #FFD700;
+    fill: #FFD700;
 }
 
 .top-right:hover {
-  width: 230px;
+    width: 230px;
 }
 
 .top-right .github-text {
-  opacity: 0;
-  margin-left: 10px;
-  color: #FFFFFF;
-  white-space: nowrap;
-  transition: opacity 0.3s ease;
+    opacity: 0;
+    margin-left: 10px;
+    color: #FFFFFF;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
 }
 
 .top-right:hover .github-text {
-  opacity: 1;
+    opacity: 1;
 }
 
 .disclaimer {
-  font-size: 0.8rem;
-  color: #FFD700;
-  text-align: center;
-  margin-top: 10px;
+    font-size: 0.8rem;
+    color: #FFD700;
+    text-align: center;
+    margin-top: 10px;
 }

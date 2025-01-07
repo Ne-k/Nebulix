@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "commonjs",
     "target": "es6",
     "esModuleInterop": true,
@@ -13,11 +17,15 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["api/**/*.ts", "src/**/*.ts", "src/**/*.tsx"]}
+  "include": [
+    "api/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ]
+}

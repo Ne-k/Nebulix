@@ -1,6 +1,6 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import {VercelRequest, VercelResponse} from '@vercel/node';
 import axios from 'axios';
-import { config } from "dotenv";
+import {config} from "dotenv";
 import rateLimit from 'express-rate-limit';
 import multer from 'multer';
 
@@ -75,8 +75,8 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 return res.status(500).send('Error parsing form data');
             }
 
-            const { name, team, contact, offer, tradeFor } = req.body;
-            console.log('Parsed Form Data:', { name, team, contact, offer, tradeFor });
+            const {name, team, contact, offer, tradeFor} = req.body;
+            console.log('Parsed Form Data:', {name, team, contact, offer, tradeFor});
 
             const nameCapitalized = capitalizeWords(name);
             const sanitizedContact = contact.replace(/[\s-]/g, '_');
@@ -143,7 +143,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
         });
     } catch (error: unknown) {
         console.error('Error:', error);
-        res.status(500).send({ error: 'Server Error', details: (error as Error).message });
+        res.status(500).send({error: 'Server Error', details: (error as Error).message});
     }
 };
 
