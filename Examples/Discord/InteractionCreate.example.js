@@ -30,7 +30,6 @@ module.exports = async (client, interaction) => {
 
         const footer = botMessage.embeds[0].footer.text;
         let storedContactInfo = decodeBase64(footer);
-        storedContactInfo = decodeBase64(storedContactInfo);
         const userNickname = interaction.member.nickname || interaction.user.username;
 
         if (contactInfo !== storedContactInfo) {

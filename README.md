@@ -113,6 +113,7 @@ To use the `Examples/Discord/InteractionCreate.example.js` file, follow these st
 ## Laundry List
 
 - [ ] Implement ReCaptcha to prevent spamming of requests
+- [ ] Implement the delete request button
 
 ## Contributing
 
