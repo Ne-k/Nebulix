@@ -21,8 +21,8 @@ const validateRecaptchaToken = async (token: string) => {
     const recaptchaKey = process.env.RECAPTCHA_SITE_KEY;
     const recaptchaAction = "submit";
 
-    console.log('Recaptcha Key', recaptchaKey);
-    console.log('Token', token);
+    console.log('Recaptcha Key:', recaptchaKey);
+    console.log('Token:', token);
 
     const client = new RecaptchaEnterpriseServiceClient({
         credentials: {
@@ -44,22 +44,27 @@ const validateRecaptchaToken = async (token: string) => {
         parent: projectPath,
     };
 
-    const [response] = await client.createAssessment(request);
+    try {
+        const [response] = await client.createAssessment(request);
+        console.log('CreateAssessment response:', response);
 
-    if (!response.tokenProperties?.valid) {
-        console.log(`The CreateAssessment call failed because the token was: ${response.tokenProperties?.invalidReason ?? 'Unknown reason'}`);
-        return false;
-    }
+        if (!response.tokenProperties?.valid) {
+            console.log(`The CreateAssessment call failed because the token was: ${response.tokenProperties?.invalidReason ?? 'Unknown reason'}`);
+            return false;
+        }
 
-    if (response.tokenProperties?.action === recaptchaAction) {
-        console.log(`The reCAPTCHA score is: ${response.riskAnalysis?.score ?? 'Unknown'}`);
-        response.riskAnalysis?.reasons?.forEach((reason: protos.google.cloud.recaptchaenterprise.v1.RiskAnalysis.ClassificationReason) => {
-            console.log(reason);
-        });
-
-        return true;
-    } else {
-        console.log("The action attribute in your reCAPTCHA tag does not match the action you are expecting to score");
+        if (response.tokenProperties?.action === recaptchaAction) {
+            console.log(`The reCAPTCHA score is: ${response.riskAnalysis?.score ?? 'Unknown'}`);
+            response.riskAnalysis?.reasons?.forEach((reason: protos.google.cloud.recaptchaenterprise.v1.RiskAnalysis.ClassificationReason) => {
+                console.log(reason);
+            });
+            return true;
+        } else {
+            console.log("The action attribute in your reCAPTCHA tag does not match the action you are expecting to score");
+            return false;
+        }
+    } catch (error) {
+        console.error('Error during CreateAssessment:', error);
         return false;
     }
 };
