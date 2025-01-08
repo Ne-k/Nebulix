@@ -14,6 +14,10 @@ const encodeBase64 = (str: string) => {
 
 const upload = multer();
 
+const getApiUrl = (endpoint: any) => {
+    return `${window.location.origin}${endpoint}`;
+};
+
 const handler = async (req: VercelRequest, res: VercelResponse) => {
     const discordBotToken = process.env.DISCORD_BOT_TOKEN;
     const channelId = process.env.DISCORD_CHANNEL_ID;
@@ -27,7 +31,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
             const { name, team, contact, offer, tradeFor, recaptchaToken } = req.body;
 
             const recaptchaValidationResponse = await axios.post(
-                '/api/recaptchaHandler',
+                getApiUrl('/api/recaptchaHandler'),
                 { recaptchaToken }
             );
 
