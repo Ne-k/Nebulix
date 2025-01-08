@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         grecaptcha.enterprise.ready(async () => {
             const token = await grecaptcha.enterprise.execute('6LcWVLEqAAAAALTM8-wLsYE9DQbX9x2SsqCPjE5p', {action: 'submit'});
-            console.log('Generated reCAPTCHA token:', token);  // Log token for debugging
+            console.log('Generated reCAPTCHA token:', token);
 
             const recaptchaTokenField = document.getElementById('recaptchaToken') as HTMLInputElement;
             if (recaptchaTokenField) {
