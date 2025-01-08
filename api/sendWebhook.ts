@@ -1,8 +1,8 @@
-import {VercelRequest, VercelResponse} from '@vercel/node';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
-import {config} from "dotenv";
-import rateLimit from 'express-rate-limit';
+import { config } from 'dotenv';
 import multer from 'multer';
+import { RecaptchaEnterpriseServiceClient, protos } from '@google-cloud/recaptcha-enterprise';
 
 config();
 
@@ -14,69 +14,78 @@ const encodeBase64 = (str: string) => {
     return Buffer.from(str).toString('base64');
 };
 
-const getClientId = (req: VercelRequest): string | null => {
-    const clientId = req.headers['x-client-id'];
-    return typeof clientId === 'string' ? clientId : null;
-};
-
-const clientRateLimiters = new Map<string, ReturnType<typeof rateLimit>>();
-const ipRateLimiter = rateLimit({
-    windowMs: 60 * 1000, // 1 minute
-    limit: 3,
-    handler: (_req, res) => {
-        res.status(429).send('Too many requests from this IP, please try again later. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
-    }
-});
-
-const createRateLimiter = () => rateLimit({
-    windowMs: 60 * 1000, // 1 minute
-    limit: 3,
-    handler: (_req, res) => {
-        res.status(429).send('Too many requests from this client, please try again later. If you continue to have issues, please feel free to talk to a team member and we can help you out.');
-    }
-});
-
 const upload = multer();
+
+const validateRecaptchaToken = async (token: string) => {
+    const projectID = String(process.env.GOOGLE_PROJECT_ID);
+    const recaptchaKey = process.env.RECAPTCHA_SITE_KEY;
+    const recaptchaAction = "submit";
+
+    console.log('Recaptcha Key:', recaptchaKey);
+    console.log('Token:', token);
+
+    const client = new RecaptchaEnterpriseServiceClient({
+        credentials: {
+            private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+            client_email: process.env.GOOGLE_CLIENT_EMAIL
+        },
+        projectId: projectID
+    });
+
+    const projectPath = client.projectPath(projectID);
+
+    const request: protos.google.cloud.recaptchaenterprise.v1.ICreateAssessmentRequest = {
+        assessment: {
+            event: {
+                token: token,
+                siteKey: recaptchaKey,
+            },
+        },
+        parent: projectPath,
+    };
+
+    try {
+        const [response] = await client.createAssessment(request);
+        console.log('CreateAssessment response:', response);
+
+        if (!response.tokenProperties?.valid) {
+            console.log(`The CreateAssessment call failed because the token was: ${response.tokenProperties?.invalidReason ?? 'Unknown reason'}`);
+            return false;
+        }
+
+        if (response.tokenProperties?.action === recaptchaAction) {
+            console.log(`The reCAPTCHA score is: ${response.riskAnalysis?.score ?? 'Unknown'}`);
+            response.riskAnalysis?.reasons?.forEach((reason: protos.google.cloud.recaptchaenterprise.v1.RiskAnalysis.ClassificationReason) => {
+                console.log(reason);
+            });
+            return true;
+        } else {
+            console.log("The action attribute in your reCAPTCHA tag does not match the action you are expecting to score");
+            return false;
+        }
+    } catch (error) {
+        console.error('Error during CreateAssessment:', error);
+        return false;
+    }
+};
 
 const handler = async (req: VercelRequest, res: VercelResponse) => {
     const discordBotToken = process.env.DISCORD_BOT_TOKEN;
     const channelId = process.env.DISCORD_CHANNEL_ID;
 
-    const clientId = getClientId(req);
-
-    const applyRateLimiter = (limiter: ReturnType<typeof rateLimit>) => {
-        return new Promise<void>((resolve, reject) => {
-            limiter(req as any, res as any, (err: unknown) => {
-                if (err) return reject(err);
-                resolve();
-            });
-        });
-    };
-
     try {
-        if (clientId) {
-            if (!clientRateLimiters.has(clientId)) {
-                clientRateLimiters.set(clientId, createRateLimiter());
-            }
-
-            const limiter = clientRateLimiters.get(clientId);
-            if (!limiter) {
-                return res.status(500).send('Rate limiter initialization error');
-            }
-
-            await applyRateLimiter(limiter);
-        } else {
-            await applyRateLimiter(ipRateLimiter);
-        }
-
-        // Parse the form data
         upload.none()(req as any, res as any, async (err: any) => {
             if (err) {
                 return res.status(500).send('Error parsing form data');
             }
 
-            const {name, team, contact, offer, tradeFor} = req.body;
-            console.log('Parsed Form Data:', {name, team, contact, offer, tradeFor});
+            const { name, team, contact, offer, tradeFor, recaptchaToken } = req.body;
+            console.log('Parsed Form Data:', { name, team, contact, offer, tradeFor });
+
+            const isValidRecaptcha = await validateRecaptchaToken(recaptchaToken);
+            if (!isValidRecaptcha) {
+                return res.status(400).send('Invalid reCAPTCHA token');
+            }
 
             const nameCapitalized = capitalizeWords(name);
             const sanitizedContact = contact.replace(/[\s-]/g, '_');
@@ -97,6 +106,8 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 }
             );
 
+            console.log('Thread response:', threadResponse.data);
+
             const threadId = threadResponse.data.id;
 
             const embed = {
@@ -107,7 +118,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 `,
                 color: 3447003,
                 footer: {
-                    text: `${encodeBase64(encodedContact)}`
+                    text: `${encodedContact}`
                 }
             };
 
@@ -120,12 +131,18 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                             style: 1, // Primary style
                             label: "Claim",
                             custom_id: `Trading_${encodedContact}`
+                        },
+                        {
+                            type: 2, // Button
+                            style: 2,
+                            label: "Delete Request",
+                            custom_id: `Delete_${threadId}`
                         }
                     ]
                 }
             ];
 
-            await axios.post(
+            const messageResponse = await axios.post(
                 `https://discord.com/api/v9/channels/${threadId}/messages`,
                 {
                     embeds: [embed],
@@ -139,12 +156,15 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 }
             );
 
+            console.log('Message response:', messageResponse.data);
+
             res.status(200).send('Message sent');
         });
     } catch (error: unknown) {
-        console.error('Error:', error);
-        res.status(500).send({error: 'Server Error', details: (error as Error).message});
+        const typedError = error as any;
+        console.error('Error:', typedError.message, typedError.response?.data);
+        res.status(500).send({ error: 'Server Error', details: typedError.message });
     }
 };
 
-module.exports = handler;
+export default handler;

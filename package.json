@@ -25,6 +25,7 @@
     "vite": "^5.4.8"
   },
   "dependencies": {
+    "@google-cloud/recaptcha-enterprise": "^5.13.0",
     "@vercel/node": "^2.10.3",
     "axios": "^1.7.7",
     "cookie": "^1.0.2",
