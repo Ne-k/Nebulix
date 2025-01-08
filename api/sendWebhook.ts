@@ -21,9 +21,6 @@ const validateRecaptchaToken = async (token: string) => {
     const recaptchaKey = process.env.RECAPTCHA_SITE_KEY;
     const recaptchaAction = "submit";
 
-    console.log('Recaptcha Key:', recaptchaKey);
-    console.log('Token:', token);
-
     const client = new RecaptchaEnterpriseServiceClient({
         credentials: {
             private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
@@ -80,7 +77,6 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
             }
 
             const { name, team, contact, offer, tradeFor, recaptchaToken } = req.body;
-            console.log('Parsed Form Data:', { name, team, contact, offer, tradeFor });
 
             const isValidRecaptcha = await validateRecaptchaToken(recaptchaToken);
             if (!isValidRecaptcha) {
@@ -121,7 +117,6 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 }
             };
 
-            console.log(encodedContact)
 
             const components = [
                 {

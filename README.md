@@ -15,7 +15,12 @@ The purpose of Nebulix is to streamline the process of trading FIRST FRC shirts 
 - **ReCaptcha Integration**: Implement ReCaptcha to prevent spamming of requests and ensure only genuine submissions.
 
 ## Examples
-![img_1.png](Examples/Assets/img_1.png)
+![Screenshot 2025-01-07 213554.png](Examples/Assets/Screenshot%202025-01-07%20213554.png)
+![IMG_7252.jpg](Examples/Assets/IMG_7252.jpg)
+![IMG_7253.PNG](Examples/Assets/IMG_7253.PNG)
+![IMG_7254.PNG](Examples/Assets/IMG_7254.PNG)
+![IMG_7256.jpg](Examples/Assets/IMG_7256.jpg)
+
 
 ## Getting Started
 
@@ -95,15 +100,15 @@ The project consists of two main parts:
 1. **Website End**: This part of the system creates the Discord channel thread and sends a message with a trade request. It is handled by the `api/sendWebhook.ts` file.
 2. **Interaction Handling**: This part handles the interaction when a user clicks the "Claim" button in the Discord message. It is handled by the `Discord/InteractionCreate.example.js` file.
 
-### Using `Discord/InteractionCreate.example.js`
+### Using `Examples/Discord/InteractionCreate.example.js`
 
-To use the `Discord/InteractionCreate.example.js` file, follow these steps:
+To use the `Examples/Discord/InteractionCreate.example.js` file, follow these steps:
 
 1. Ensure your Discord bot is set up to handle interactions. This typically involves setting up an event listener for interactions in your bot's main file.
 
 2. Ensure your bot has the necessary permissions to create threads and send messages in the specified channel.
 
-**Note:** The `Discord/InteractionCreate.example.js` file is meant to be an example or a rough idea of the interaction handling side of the bot and may be implemented differently depending on your bot structure.
+**Note:** The `Examples/Discord/InteractionCreate.example.js` file is meant to be an example or a rough idea of the interaction handling side of the bot and may be implemented differently depending on your bot structure.
 
 ## Laundry List
 
