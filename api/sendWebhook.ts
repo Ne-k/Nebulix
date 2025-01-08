@@ -44,6 +44,7 @@ const validateRecaptchaToken = async (token: string) => {
     };
 
     const [response] = await client.createAssessment(request);
+    console.log('Recaptcha Response:', response);
 
     if (!response.tokenProperties?.valid) {
         console.log(`The CreateAssessment call failed because the token was: ${response.tokenProperties?.invalidReason ?? 'Unknown reason'}`);
