@@ -1,10 +1,10 @@
 # Nebulix
 
-Nebulix is a project that integrates with Discord to handle trade requests for FIRST FRC shirt/goods trading. This project is built using TypeScript and Node.js. It is designed to simplify the trading process and prioritize first-come, first-serve.
+Nebulix is a project integrated with Discord to help manage FIRST FRC shirt/merch trades. The application itself is written in TypeScript using Node.js to keep things simple and as first-come, first-served as possible.
 
 ## Purpose
 
-The purpose of Nebulix is to streamline the process of trading FIRST FRC shirts and goods by automating the creation and management of trade requests through a Discord bot. This ensures a fair and efficient trading experience for all users.
+Nebulix is developed to make FIRST FRC shirt and merchandise trading easier through building a Discord bot with ease of creating or managing trade requests, making the exchange fair and efficient between the different parties.
 
 ## Features
 
@@ -46,7 +46,6 @@ The purpose of Nebulix is to streamline the process of trading FIRST FRC shirts 
     ```dotenv
     DISCORD_BOT_TOKEN=your_discord_bot_token
     DISCORD_CHANNEL_ID=your_discord_channel_id
-    GITHUB_REPO_URL=https://github.com/Ne-k/Nebulix
     RECAPTCHA_SITE_KEY=your_recaptcha_site_key
     RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
     GOOGLE_CLOUD_PROJECT_ID=your_google_cloud_project_id
