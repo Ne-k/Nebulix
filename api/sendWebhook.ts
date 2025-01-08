@@ -108,7 +108,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
             const embed = {
                 title: "New Trade Request",
                 description: `
-                    \`${nameCapitalized}\` from \`${team}\` would like to trade \`${offer}\` for \`${tradeFor}\`.
+                    \`${nameCapitalized.trim()}\` from \`${team.trim()}\` would like to trade \`${offer.trim()}\` for \`${tradeFor.trim()}\`.
                     **Contact Information:** [Revealed when you claim the trade]
                 `,
                 color: 3447003,
@@ -120,17 +120,17 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
 
             const components = [
                 {
-                    type: 1, // Action row
+                    type: 1,
                     components: [
                         {
-                            type: 2, // Button
-                            style: 1, // Primary style
+                            type: 2,
+                            style: 1,
                             label: "Claim",
-                            custom_id: `Trading_${encodedContact}`
+                            custom_id: `Trading_${threadId}_${encodedContact}`
                         },
                         {
                             type: 2, // Button
-                            style: 2,
+                            style: 4,
                             label: "Delete Request [UNFINISHED]",
                             custom_id: `Delete_${threadId}`
                         }
