@@ -2,7 +2,6 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import { config } from 'dotenv';
 import multer from 'multer';
-import { RecaptchaEnterpriseServiceClient } from '@google-cloud/recaptcha-enterprise';
 
 config();
 
@@ -14,54 +13,33 @@ const encodeBase64 = (str: string) => {
     return Buffer.from(str).toString('base64');
 };
 
-// const getClientId = (req: VercelRequest): string | null => {
-//     const clientId = req.headers['x-client-id'];
-//     return typeof clientId === 'string' ? clientId : null;
-// };
-
 const upload = multer();
 
 const validateRecaptchaToken = async (token: string) => {
-    const projectID = String(process.env.GOOGLE_PROJECT_ID);
-    const recaptchaKey = process.env.RECAPTCHA_SITE_KEY;
-    const recaptchaAction = "submit";
-
-    const client = new RecaptchaEnterpriseServiceClient({
-        credentials: {
-            private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-            client_email: process.env.GOOGLE_CLIENT_EMAIL
-        },
-        projectId: projectID
-    });
-
-    const projectPath = client.projectPath(projectID);
-
-    const request = {
-        assessment: {
-            event: {
-                token: token,
-                siteKey: recaptchaKey,
-            },
-        },
-        parent: projectPath,
+    const apiKey = process.env.RECAPTCHA_SECRET_KEY;
+    const requestBody = {
+        event: {
+            token: token,
+            expectedAction: "submit",
+            siteKey: process.env.RECAPTCHA_SITE_KEY
+        }
     };
 
-    const [response] = await client.createAssessment(request);
+    try {
+        const response = await axios.post(
+            `https://recaptchaenterprise.googleapis.com/v1/projects/${process.env.GOOGLE_CLOUD_PROJECT_ID}/assessments?key=${apiKey}`,
+            requestBody
+        );
 
-    if (!response.tokenProperties?.valid) {
-        console.log(`The CreateAssessment call failed because the token was: ${response.tokenProperties?.invalidReason ?? 'Unknown reason'}`);
-        return false;
-    }
-
-    if (response.tokenProperties?.action === recaptchaAction) {
-        console.log(`The reCAPTCHA score is: ${response.riskAnalysis?.score ?? 'Unknown'}`);
-        response.riskAnalysis?.reasons?.forEach((reason) => {
-            console.log(reason);
-        });
-
-        return true;
-    } else {
-        console.log("The action attribute in your reCAPTCHA tag does not match the action you are expecting to score");
+        if (response.data.tokenProperties.valid) {
+            console.log(`The reCAPTCHA score is: ${response.data.riskAnalysis.score ?? 'Unknown'}`);
+            return true;
+        } else {
+            console.log(`The CreateAssessment call failed because the token was: ${response.data.tokenProperties.invalidReason ?? 'Unknown reason'}`);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error validating reCAPTCHA token:', error);
         return false;
     }
 };
@@ -70,10 +48,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
     const discordBotToken = process.env.DISCORD_BOT_TOKEN;
     const channelId = process.env.DISCORD_CHANNEL_ID;
 
-    // const clientId = getClientId(req);
-
     try {
-        // Parse the form data
         upload.none()(req as any, res as any, async (err: any) => {
             if (err) {
                 return res.status(500).send('Error parsing form data');
@@ -167,4 +142,4 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
     }
 };
 
-module.exports = handler;
+export default handler;
