@@ -21,7 +21,7 @@ const validateRecaptchaToken = async (token: string) => {
     const recaptchaKey = process.env.RECAPTCHA_SITE_KEY;
     const recaptchaAction = "submit";
 
-    console.log(recaptchaKey);
+    console.log("Recaptcha Key " + recaptchaKey);
 
     const client = new RecaptchaEnterpriseServiceClient({
         credentials: {
@@ -65,6 +65,7 @@ const validateRecaptchaToken = async (token: string) => {
 
 const handler = async (req: VercelRequest, res: VercelResponse) => {
     const discordBotToken = process.env.DISCORD_BOT_TOKEN;
+    console.log('Discord Bot Token:', discordBotToken);
     const channelId = process.env.DISCORD_CHANNEL_ID;
 
     try {
