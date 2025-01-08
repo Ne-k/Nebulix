@@ -1,10 +1,8 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import multer from 'multer';
-import { RecaptchaEnterpriseServiceClient, protos } from '@google-cloud/recaptcha-enterprise';
 import { config } from 'dotenv';
 config();
-
 
 const capitalizeWords = (str: string) => {
     return str.replace(/\b\w/g, char => char.toUpperCase());
@@ -16,57 +14,8 @@ const encodeBase64 = (str: string) => {
 
 const upload = multer();
 
-const validateRecaptchaToken = async (token: string) => {
-    const projectID = String(process.env.GOOGLE_PROJECT_ID);
-    const recaptchaKey = process.env.RECAPTCHA_SITE_KEY;
-    const recaptchaAction = "submit";
-
-    console.log("Recaptcha Key " + recaptchaKey);
-
-    const client = new RecaptchaEnterpriseServiceClient({
-        credentials: {
-            private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-            client_email: process.env.GOOGLE_CLIENT_EMAIL
-        },
-        projectId: projectID
-    });
-
-    const projectPath = client.projectPath(projectID);
-
-    const request: protos.google.cloud.recaptchaenterprise.v1.ICreateAssessmentRequest = {
-        assessment: {
-            event: {
-                token: token,
-                siteKey: recaptchaKey,
-            },
-        },
-        parent: projectPath,
-    };
-
-    const [response] = await client.createAssessment(request);
-    console.log('Recaptcha Response:', response);
-
-    if (!response.tokenProperties?.valid) {
-        console.log(`The CreateAssessment call failed because the token was: ${response.tokenProperties?.invalidReason ?? 'Unknown reason'}`);
-        return false;
-    }
-
-    if (response.tokenProperties?.action === recaptchaAction) {
-        console.log(`The reCAPTCHA score is: ${response.riskAnalysis?.score ?? 'Unknown'}`);
-        response.riskAnalysis?.reasons?.forEach((reason: protos.google.cloud.recaptchaenterprise.v1.RiskAnalysis.ClassificationReason) => {
-            console.log(reason);
-        });
-
-        return true;
-    } else {
-        console.log("The action attribute in your reCAPTCHA tag does not match the action you are expecting to score");
-        return false;
-    }
-};
-
 const handler = async (req: VercelRequest, res: VercelResponse) => {
     const discordBotToken = process.env.DISCORD_BOT_TOKEN;
-    console.log('Discord Bot Token:', discordBotToken);
     const channelId = process.env.DISCORD_CHANNEL_ID;
 
     try {
@@ -76,10 +25,13 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
             }
 
             const { name, team, contact, offer, tradeFor, recaptchaToken } = req.body;
-            console.log('Parsed Form Data:', { name, team, contact, offer, tradeFor });
 
-            const isValidRecaptcha = await validateRecaptchaToken(recaptchaToken);
-            if (!isValidRecaptcha) {
+            const recaptchaValidationResponse = await axios.post(
+                '/api/recaptchaHandler',
+                { recaptchaToken }
+            );
+
+            if (recaptchaValidationResponse.status !== 200) {
                 return res.status(400).send('Invalid reCAPTCHA token');
             }
 
@@ -101,8 +53,6 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                     }
                 }
             );
-
-            console.log('Thread response:', threadResponse.data);
 
             const threadId = threadResponse.data.id;
 
@@ -138,7 +88,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 }
             ];
 
-            const messageResponse = await axios.post(
+            await axios.post(
                 `https://discord.com/api/v9/channels/${threadId}/messages`,
                 {
                     embeds: [embed],
@@ -152,13 +102,10 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 }
             );
 
-            console.log('Message response:', messageResponse.data);
-
             res.status(200).send('Message sent');
         });
     } catch (error: unknown) {
         const typedError = error as any;
-        console.error('Error:', typedError.message, typedError.response?.data);
         res.status(500).send({ error: 'Server Error', details: typedError.message });
     }
 };

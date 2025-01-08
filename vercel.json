@@ -3,6 +3,10 @@
     "api/sendWebhook.ts": {
       "memory": 1024,
       "maxDuration": 30
+    },
+    "api/recaptchaHandler.ts": {
+      "memory": 512,
+      "maxDuration": 15
     }
   }
 }
