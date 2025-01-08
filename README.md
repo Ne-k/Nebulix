@@ -121,4 +121,4 @@ Please read the [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU LESSER GENERAL PUBLIC License - see the [LICENSE](LICENSE) file for details.
