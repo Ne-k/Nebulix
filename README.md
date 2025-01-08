@@ -11,9 +11,11 @@ The purpose of Nebulix is to streamline the process of trading FIRST FRC shirts 
 - **Create Trade Request Threads in Discord**: Automatically create threads in a specified Discord channel for each trade request.
 - **Automated Trade Request Management**: Manage trade requests by handling user interactions and updating the status of trades.
 - **User-Friendly Interaction Handling**: Provide an easy-to-use interface for users to submit trade requests and interact with the bot.
-- **Rate Limiting**: Prevent users from submitting too many requests in a short period to ensure fair usage.
 - **Form Validation**: Ensure all required fields are filled out before allowing form submission.
 - **ReCaptcha Integration**: Implement ReCaptcha to prevent spamming of requests and ensure only genuine submissions.
+
+## Examples
+![img_1.png](Examples/Assets/img_1.png)
 
 ## Getting Started
 
@@ -47,6 +49,37 @@ The purpose of Nebulix is to streamline the process of trading FIRST FRC shirts 
     GOOGLE_PRIVATE_KEY=your_google_private_key
     GOOGLE_CLIENT_EMAIL=your_google_client_email
     ```
+   > There are two instances in the code where you'll have to change the site key, this will likely get changed in the future:
+   > - One at [index.html#L13](https://github.com/Ne-k/Nebulix/blob/47ab5400104382d2dfafe75f6423d5e36a60c61f/index.html#L13)
+   > - The other at [main.ts#L80](https://github.com/Ne-k/Nebulix/blob/47ab5400104382d2dfafe75f6423d5e36a60c61f/src/main.ts#L80)
+
+
+
+
+### Obtaining Environment Variables
+
+#### Discord Bot Token and Channel ID
+
+1. Go to the [Discord Developer Portal](https://discord.com/developers/applications).
+2. Create a new application and add a bot to it.
+3. Copy the bot token from the bot settings page.
+4. Add the bot to your server and obtain the channel ID where you want to manage trade requests.
+
+#### Google Cloud Credentials
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Create a new project or select an existing one.
+3. Navigate to the "APIs & Services" > "Credentials" page.
+4. Click on "Create Credentials" and select "Service Account".
+5. Follow the prompts to create a service account and download the JSON key file.
+6. Extract the necessary information from the JSON key file and add it to your `.env` file. This includes `GOOGLE_CLOUD_PROJECT_ID`, `GOOGLE_PROJECT_ID`, `GOOGLE_PRIVATE_KEY`, and `GOOGLE_CLIENT_EMAIL`.
+
+#### ReCaptcha Keys
+
+1. Go to the [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin).
+2. Register a new site and choose reCAPTCHA v2 or v3.
+3. Add your domain and obtain the site key and secret key.
+4. Add these keys to your `.env` file as `RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY`.
 
 4. Run the project:
     ```sh

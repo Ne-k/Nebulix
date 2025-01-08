@@ -106,7 +106,6 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                 }
             );
 
-            console.log('Thread response:', threadResponse.data);
 
             const threadId = threadResponse.data.id;
 
@@ -121,6 +120,8 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                     text: `${encodedContact}`
                 }
             };
+
+            console.log(encodedContact)
 
             const components = [
                 {
