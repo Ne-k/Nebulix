@@ -1,10 +1,10 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
-import { config } from 'dotenv';
 import multer from 'multer';
 import { RecaptchaEnterpriseServiceClient, protos } from '@google-cloud/recaptcha-enterprise';
-
+import { config } from 'dotenv';
 config();
+
 
 const capitalizeWords = (str: string) => {
     return str.replace(/\b\w/g, char => char.toUpperCase());
