@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <label for="tradeFor">Trade Request:</label>
           <input type="text" id="tradeFor" name="tradeFor" required>
           <input type="hidden" name="recaptchaToken" id="recaptchaToken" />
-          <p class="disclaimer">*Submitting this form will send a message to the team's communications server and is limited to 3 submissions per minute.<br>If you have any issues reach out to a team member.</p>
+          <p class="disclaimer">*Submitting this form will send a message to the team's communications server and is limited to 3 submissions per minute.<br>* If you have any issues reach out to a team member.</p>
           <button type="submit" class="submit-button">Submit</button>
         </form>
       </div>
