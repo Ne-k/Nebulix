@@ -1,10 +1,10 @@
 # Nebulix
 
-Nebulix is a project integrated with Discord to help manage FIRST FRC shirt/merch trades. The application itself is written in TypeScript using Node.js to keep things simple and as first-come, first-served as possible.
+Nebulix is a project integrated with Discord to help manage FIRST FRC shirt/merch trades. The application is written in TypeScript using Node.js to keep things simple and as first-come, first-served as possible.
 
 ## Purpose
 
-Nebulix is developed to make FIRST FRC shirt and merchandise trading easier through building a Discord bot with ease of creating or managing trade requests, making the exchange fair and efficient between the different parties.
+Nebulix is developed to make FIRST FRC shirt and merchandise trading easier by building a Discord bot with ease of creating or managing trade requests, making the exchange fair and efficient between the different parties.
 
 ## Features
 
@@ -97,7 +97,7 @@ Nebulix is developed to make FIRST FRC shirt and merchandise trading easier thro
 The project consists of two main parts:
 
 1. **Website End**: This part of the system creates the Discord channel thread and sends a message with a trade request. It is handled by the `api/sendWebhook.ts` file.
-2. **Interaction Handling**: This part handles the interaction when a user clicks the "Claim" button in the Discord message. It is handled by the `Discord/InteractionCreate.example.js` file.
+2. **Interaction Handling**: This part handles the interaction when a user clicks the "Claim" button in the Discord message. The `Discord/InteractionCreate.example.js` file handles it.
 
 ### Using `Examples/Discord/InteractionCreate.example.js`
 
@@ -105,13 +105,14 @@ To use the `Examples/Discord/InteractionCreate.example.js` file, follow these st
 
 1. Ensure your Discord bot is set up to handle interactions. This typically involves setting up an event listener for interactions in your bot's main file.
 
-2. Ensure your bot has the necessary permissions to create threads and send messages in the specified channel.
+2. Ensure your bot has the permission to create threads and send messages in the specified channel.
 
 **Note:** The `Examples/Discord/InteractionCreate.example.js` file is meant to be an example or a rough idea of the interaction handling side of the bot and may be implemented differently depending on your bot structure.
 
 ## Laundry List
 
 - [ ] Implement ReCaptcha to prevent spamming of requests
+- [ ] Create a Trading Override slash command that uses a modal in case the website 
 - [x] Implement the delete request button
 
 ## Contributing
