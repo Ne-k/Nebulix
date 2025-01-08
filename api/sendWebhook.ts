@@ -2,6 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import axios from 'axios';
 import { config } from 'dotenv';
 import multer from 'multer';
+import { RecaptchaEnterpriseServiceClient, protos } from '@google-cloud/recaptcha-enterprise';
 
 config();
 
@@ -16,30 +17,48 @@ const encodeBase64 = (str: string) => {
 const upload = multer();
 
 const validateRecaptchaToken = async (token: string) => {
-    const apiKey = process.env.RECAPTCHA_SECRET_KEY;
-    const requestBody = {
-        event: {
-            token: token,
-            expectedAction: "submit",
-            siteKey: process.env.RECAPTCHA_SITE_KEY
-        }
+    const projectID = String(process.env.GOOGLE_PROJECT_ID);
+    const recaptchaKey = process.env.RECAPTCHA_SITE_KEY;
+    const recaptchaAction = "submit";
+
+    console.log(recaptchaKey);
+
+    const client = new RecaptchaEnterpriseServiceClient({
+        credentials: {
+            private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+            client_email: process.env.GOOGLE_CLIENT_EMAIL
+        },
+        projectId: projectID
+    });
+
+    const projectPath = client.projectPath(projectID);
+
+    const request: protos.google.cloud.recaptchaenterprise.v1.ICreateAssessmentRequest = {
+        assessment: {
+            event: {
+                token: token,
+                siteKey: recaptchaKey,
+            },
+        },
+        parent: projectPath,
     };
 
-    try {
-        const response = await axios.post(
-            `https://recaptchaenterprise.googleapis.com/v1/projects/${process.env.GOOGLE_CLOUD_PROJECT_ID}/assessments?key=${apiKey}`,
-            requestBody
-        );
+    const [response] = await client.createAssessment(request);
 
-        if (response.data.tokenProperties.valid) {
-            console.log(`The reCAPTCHA score is: ${response.data.riskAnalysis.score ?? 'Unknown'}`);
-            return true;
-        } else {
-            console.log(`The CreateAssessment call failed because the token was: ${response.data.tokenProperties.invalidReason ?? 'Unknown reason'}`);
-            return false;
-        }
-    } catch (error) {
-        console.error('Error validating reCAPTCHA token:', error);
+    if (!response.tokenProperties?.valid) {
+        console.log(`The CreateAssessment call failed because the token was: ${response.tokenProperties?.invalidReason ?? 'Unknown reason'}`);
+        return false;
+    }
+
+    if (response.tokenProperties?.action === recaptchaAction) {
+        console.log(`The reCAPTCHA score is: ${response.riskAnalysis?.score ?? 'Unknown'}`);
+        response.riskAnalysis?.reasons?.forEach((reason: protos.google.cloud.recaptchaenterprise.v1.RiskAnalysis.ClassificationReason) => {
+            console.log(reason);
+        });
+
+        return true;
+    } else {
+        console.log("The action attribute in your reCAPTCHA tag does not match the action you are expecting to score");
         return false;
     }
 };
