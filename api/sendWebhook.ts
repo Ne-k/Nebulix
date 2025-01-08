@@ -131,7 +131,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
                         {
                             type: 2, // Button
                             style: 4,
-                            label: "Delete Request [UNFINISHED]",
+                            label: "Delete Request",
                             custom_id: `Delete_${threadId}`
                         }
                     ]
