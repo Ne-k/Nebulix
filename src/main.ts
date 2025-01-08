@@ -21,8 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
           <input type="text" id="offer" name="offer" required>
           <label for="tradeFor">Trade Request:</label>
           <input type="text" id="tradeFor" name="tradeFor" required>
+          <input type="hidden" name="recaptchaToken" id="recaptchaToken" />
           <p class="disclaimer">*Submitting this form will send a message to the team's communications server and is limited to 3 submissions per minute.<br>If you have any issues reach out to a team member.</p>
-          <button type="submit" class="g-recaptcha" data-sitekey="6LdHCbEqAAAAALNidX3h6BpAxyqZ8_gEYotkF0m5" data-callback='onSubmit' data-action='submit'>Submit</button>
+          <button type="submit" class="submit-button">Submit</button>
         </form>
       </div>
     </div>
@@ -77,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         grecaptcha.enterprise.ready(async () => {
             const token = await grecaptcha.enterprise.execute('6LdHCbEqAAAAALNidX3h6BpAxyqZ8_gEYotkF0m5', {action: 'submit'});
+            console.log(token)
             await onSubmit(token);
         });
     });
