@@ -22,14 +22,14 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3",
     "vanta": "^0.5.24",
-    "vite": "^5.4.8"
+    "vite": "^6.0.11"
   },
   "dependencies": {
     "@google-cloud/recaptcha-enterprise": "^5.13.0",
     "@vercel/node": "^2.10.3",
-    "axios": "^1.7.7",
+    "axios": "^1.7.9",
     "cookie": "^1.0.2",
-    "discord.js": "^14.16.3",
+    "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "express-rate-limit": "^7.4.1",
     "file-type": "^19.6.0",
@@ -37,6 +37,7 @@
     "memory-cache": "^0.2.0",
     "node-cache": "^5.1.2",
     "react-next-captcha": "^1.1.6",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "vite-plugin-node-polyfills": "^0.23.0"
   }
 }

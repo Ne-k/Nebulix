@@ -1,8 +1,5 @@
 declare var grecaptcha: any;
-import { config } from 'dotenv';
-config();
 
-const siteKey = process.env.RECAPTCHA_SITE_KEY
 
 export const initializeForm = () => {
     const form = document.querySelector<HTMLFormElement>('.trade-form');
@@ -28,7 +25,7 @@ export const initializeForm = () => {
         event.preventDefault();
 
         grecaptcha.enterprise.ready(async () => {
-            const token = await grecaptcha.enterprise.execute(siteKey, { action: 'submit' });
+            const token = await grecaptcha.enterprise.execute('6LcWVLEqAAAAALTM8-wLsYE9DQbX9x2SsqCPjE5p', { action: 'submit' });
 
             const recaptchaTokenField = document.getElementById('recaptchaToken') as HTMLInputElement;
             if (recaptchaTokenField) {
