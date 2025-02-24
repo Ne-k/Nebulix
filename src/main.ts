@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <input type="text" id="tradeFor" name="tradeFor" required>
           <input type="hidden" name="recaptchaToken" id="recaptchaToken" />
           <p class="disclaimer">*Submitting this form will send a message to the team's communications server and is limited to 3 submissions per minute.<br>*If you have any issues reach out to a team member.</p>
+          <p class="disclaimer-large">This page is protected by ReCaptcha and the Google <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.</p>
           <button type="submit" class="submit-button">Submit</button>
         </form>
       </div>

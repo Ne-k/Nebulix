@@ -272,3 +272,10 @@ button:focus:not(:disabled) {
     text-align: center;
     margin-top: 10px;
 }
+
+.disclaimer-large {
+    font-size: 1rem;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 10px;
+}
