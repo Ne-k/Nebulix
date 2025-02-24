@@ -111,7 +111,7 @@ To use the `Examples/Discord/InteractionCreate.example.js` file, follow these st
 
 ## Laundry List
 
-- [ ] Implement ReCaptcha to prevent spamming of requests
+- [x] Implement ReCaptcha to prevent spamming of requests
 - [ ] Create a Trading Override slash command that uses a modal in case the website 
 - [x] Implement the delete request button
 
