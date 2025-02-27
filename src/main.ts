@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="container">
       <div class="box">
         <div class="top-box">
-          <p class="text">2B Determined's Trading Form</p>
+          <p class="text">7034's Trading Form</p>
         </div>
         <form class="trade-form" id="trade-form">
           <label for="name">Name:</label>
