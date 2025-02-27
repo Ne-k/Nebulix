@@ -2,11 +2,11 @@
 
 @font-face {
     font-family: 'Impact';
-    src: url('./font/impact.ttf') format('truetype');
+    src: url('./font/Impacted.ttf') format('truetype');
 }
 
 body {
-    font-family: 'Ethnocentric', Arial, sans-serif;
+    font-family: 'Impact', Arial, sans-serif;
     background: linear-gradient(135deg, #0B3D0B, #0E4D0E);
     margin: 0;
     height: 100vh;
