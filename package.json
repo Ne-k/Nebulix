@@ -28,7 +28,7 @@
   "dependencies": {
     "@google-cloud/recaptcha-enterprise": "^5.13.0",
     "@vercel/node": "^2.10.3",
-    "axios": "^1.7.9",
+    "axios": "^1.13.5",
     "cookie": "^1.0.2",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
